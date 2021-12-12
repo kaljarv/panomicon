@@ -600,13 +600,13 @@ class ExpressionValue extends React.Component {
                   { v[0] !== UNKNOWN_EXPRESSION_VALUE &&
                     <rect width={v[0] * 50 + '%'}
                           height="100%"
-                          x={50 - (v[0] * 50) + '%'}
+                          x={(1 - (v[0] + v[1])/2) * 50 + '%'}
                           className="expressionValues--betaPos" />
                   }
                   { v[1] !== UNKNOWN_EXPRESSION_VALUE &&
                     <rect width={v[1] * 50 + '%'}
                           height="100%"
-                          x="50%"
+                          x={(1 - (v[0] + v[1])/2 + v[0]) * 50 + '%'}
                           className="expressionValues--betaNeg" />
                   }
                 </>);
