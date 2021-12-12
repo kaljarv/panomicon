@@ -1,27 +1,35 @@
 .App {
   --color-Text: black;
   --color-Secondary: rgb(125, 125, 125);
-  --color-Accent1: rgb(255, 81, 0);
-  --color-Accent2: rgb(0, 68, 255);
+  --color-Accent1: rgb(92, 16, 163);
+  --color-Accent2: rgb(145, 104, 15);
+  --color-Neg: rgb(0, 68, 255);
+  --color-Pos: rgb(255, 81, 0);
   --color-AccentBg: rgba(0, 0, 0, 0.1);
+  --color-NegBg: rgba(0, 68, 255, 0.1);
+  --color-PosBg: rgba(255, 81, 0, 0.1);
   --colWidth-S: 1rem;
   --colWidth-L: 5rem;
   --fontFamily-default: 'DM Sans', sans-serif;
   --fontFamily-mono: 'DM Mono', monospace;
   --fontSize-S: 0.8rem;
   --fontSize-M: 1rem;
+  --fontWeight-bold: bold;
+  --fontWeight-light: light;
   --iconSize-S: 0.7rem;
   --iconSize-M: 1rem;
+  --margin-XL: 3rem;
   --margin-L: 1.5rem;
   --margin-M: 1rem;
   --margin-S: 0.7rem;
   --margin-XS: 0.4rem;
   --margin-XXS: 0.2rem;
-  --transition-M: 300ms ease-out;
+  --transitionSpeed-M: 225ms;
+  --transition-M: var(--transitionSpeed-M) ease-out;
 
   --border-S: 1px dotted var(--color-Secondary);
 
-  margin: var(--margin-M);
+  margin: var(--margin-M) var(--margin-XL) var(--margin-XL) var(--margin-M);
 }
 
 .App-options {
@@ -35,6 +43,7 @@
 }
 
 .DataTable {
+  border-collapse: collapse;
   font-size: var(--fontSize-S);
   margin: var(--margin-M) 0;
 }
@@ -54,10 +63,8 @@
 
 .DataTable th {
   font-size: var(--fontSize-S);
+  font-weight: var(--fontWeight-light);
   text-align: left;
-}
-
-.thRow--level2 th {
   /* transform: rotate(180deg);
   writing-mode: vertical-rl; */
   height: 10rem;
@@ -70,7 +77,13 @@
   white-space: nowrap;
 }
 
-.thRow--level2 th > span {
+.DataTable th.colgroupHeader {
+  font-weight: var(--fontWeight-bold);
+  padding-left: var(--margin-L);
+}
+
+.DataTable th > span {
+  cursor: pointer;
   display: inline-block;
   /* position: absolute;
   bottom: 0;
@@ -86,9 +99,16 @@ th.col--Approved_symbol {
   padding-left: var(--margin-M);
 }
 
-td.firstOfGroup {
-  padding-left: var(--margin-L);
+tr.betaNeg td {
+  background-color: var(--color-NegBg);
 }
+tr.betaPos td {
+  background-color: var(--color-PosBg);
+}
+
+/* td.colGroupHeaderTD {
+  background-color: transparent !important;
+} */
 
 .DataTable td {
   border-bottom: var(--border-S);
@@ -134,17 +154,30 @@ svg.binaryTrue {
   width: var(--iconSize-S);
 }
 
-.expressionValues-rna,
+.expressionValues--betaPos {
+  color: var(--color-Pos);
+  fill: var(--color-Pos);
+}
+
+.expressionValues--betaNeg {
+  color: var(--color-Neg);
+  fill: var(--color-Neg);
+}
+
+.expressionValues--protein,
+.colgroup--Mouse_phenotypes svg.binaryTrue {
+  color: var(--color-Accent2);
+  fill: var(--color-Accent2);
+}
+
+.expressionValues--rna,
 .colgroup--Pathways svg.binaryTrue {
   color: var(--color-Accent1);
   fill: var(--color-Accent1);
 }
 
-.expressionValues-protein,
-.colgroup--Mouse_phenotypes svg.binaryTrue {
-  color: var(--color-Accent2);
-  fill: var(--color-Accent2);
-}
+
+
 
 
 
@@ -152,10 +185,88 @@ svg.binaryTrue {
  * Filtering
  */
 
+/*
 .option--showAnatomicalSystems--false .colgroup--Anatomical_systems,
 .option--showOrgans--false .colgroup--Organs,
 .option--showPathways--false .colgroup--Pathways,
-.option--showMousePhenotypes--false .colgroup--Mouse_phenotypes {
+.option--showMousePhenotypes--false .colgroup--Mouse_phenotypes
+*/
+
+.hide--colgroup--Anatomical_systems .colgroup--Anatomical_systems,
+.hide--colgroup--Organs .colgroup--Organs,
+.hide--colgroup--Pathways .colgroup--Pathways,
+.hide--colgroup--Mouse_phenotypes .colgroup--Mouse_phenotypes,
+.hide--col--Lead_variant .col--Lead_variant,
+.hide--col--Log_p_ .col--Log_p_,
+.hide--col--Beta .col--Beta,
+.hide--col--Approved_symbol .col--Approved_symbol,
+.hide--col--Coding .col--Coding,
+.hide--col--Musculoskeletal_system .col--Musculoskeletal_system,
+.hide--col--Circulatory_system .col--Circulatory_system,
+.hide--col--Nervous_system .col--Nervous_system,
+.hide--col--Integumental .col--Integumental,
+.hide--col--Hematopoietic_and_immune_systems .col--Hematopoietic_and_immune_systems,
+.hide--col--Respiratory_system .col--Respiratory_system,
+.hide--col--Digestive_system .col--Digestive_system,
+.hide--col--Urinary_system .col--Urinary_system,
+.hide--col--Reproductive_system .col--Reproductive_system,
+.hide--col--Endocrine_system .col--Endocrine_system,
+.hide--col--Exocrine_system .col--Exocrine_system,
+.hide--col--Brain .col--Brain,
+.hide--col--Eye .col--Eye,
+.hide--col--Endocrine .col--Endocrine,
+.hide--col--Respiratory_system .col--Respiratory_system,
+.hide--col--Proximal_digestive_tract .col--Proximal_digestive_tract,
+.hide--col--Gastrointestinal_tract .col--Gastrointestinal_tract,
+.hide--col--Liver___gallbladder .col--Liver___gallbladder,
+.hide--col--Pancreas .col--Pancreas,
+.hide--col--Kidney___bladder .col--Kidney___bladder,
+.hide--col--Reproductive .col--Reproductive,
+.hide--col--Muscles .col--Muscles,
+.hide--col--Bones .col--Bones,
+.hide--col--Connective___soft_tissue .col--Connective___soft_tissue,
+.hide--col--Skin .col--Skin,
+.hide--col--Spleen .col--Spleen,
+.hide--col--_Exocrine .col--_Exocrine,
+.hide--col--_Vasculature .col--_Vasculature,
+.hide--col--_Blood .col--_Blood,
+.hide--col--_Immune .col--_Immune,
+.hide--col--_Breast .col--_Breast,
+.hide--col--Cell_Cycle .col--Cell_Cycle,
+.hide--col--Cellular_responses_to_stimuli .col--Cellular_responses_to_stimuli,
+.hide--col--Developmental_Biology .col--Developmental_Biology,
+.hide--col--Disease .col--Disease,
+.hide--col--Gene_expression__Transcription_ .col--Gene_expression__Transcription_,
+.hide--col--Hemostasis .col--Hemostasis,
+.hide--col--Immune_System .col--Immune_System,
+.hide--col--Metabolism_of_RNA .col--Metabolism_of_RNA,
+.hide--col--Signal_Transduction .col--Signal_Transduction,
+.hide--col--Behavior___neurological .col--Behavior___neurological,
+.hide--col--Nervous_system .col--Nervous_system,
+.hide--col--Vision___eye .col--Vision___eye,
+.hide--col--Endocrine___exocrine_gland .col--Endocrine___exocrine_gland,
+.hide--col--Respiratory_system .col--Respiratory_system,
+.hide--col--Digestive___alimentary .col--Digestive___alimentary,
+.hide--col--Liver___biliary_system .col--Liver___biliary_system,
+.hide--col--Renal___urinary_system .col--Renal___urinary_system,
+.hide--col--Reproductive_system .col--Reproductive_system,
+.hide--col--Muscle .col--Muscle,
+.hide--col--Skeleton .col--Skeleton,
+.hide--col--Adipose_tissue .col--Adipose_tissue,
+.hide--col--Craniofacial .col--Craniofacial,
+.hide--col--Integument .col--Integument,
+.hide--col--Embryo .col--Embryo,
+.hide--col--Growth___size___body_region .col--Growth___size___body_region,
+.hide--col--Limbs___digits___tail .col--Limbs___digits___tail,
+.hide--col--Normal .col--Normal,
+.hide--col--Mortality___aging .col--Mortality___aging,
+.hide--col--Neoplasm .col--Neoplasm,
+.hide--col--Pigmentation .col--Pigmentation,
+.hide--col--Cellular .col--Cellular,
+.hide--col--Cardiovascular_system .col--Cardiovascular_system,
+.hide--col--Hematopoietic_system .col--Hematopoietic_system,
+.hide--col--Homeostasis___metabolism .col--Homeostasis___metabolism,
+.hide--col--Immune_system .col--Immune_system {
   max-width: 0 !important;
   padding: 0 !important;
   opacity: 0;

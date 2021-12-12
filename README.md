@@ -1,3 +1,7 @@
+# Panomicon
+
+A prototype tool for viewing of the multi-omics data for multiple credible sets at once.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
