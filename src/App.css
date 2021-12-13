@@ -24,6 +24,8 @@
   --margin-S: 0.7rem;
   --margin-XS: 0.4rem;
   --margin-XXS: 0.2rem;
+  --maxWidthText-M: 40rem;
+  --rotation-M: -70deg;
   --transitionSpeed-M: 225ms;
   --transition-M: var(--transitionSpeed-M) ease-out;
 
@@ -39,7 +41,14 @@
 }
 
 .App-options label {
-  margin-right: var(--margin-M);
+  cursor: pointer;
+  display: block;
+  margin-top: var(--margin-S);
+}
+
+.optionsIntro {
+  max-width: var(--maxWidthText-M);
+  font-style: italic;
 }
 
 .DataTable {
@@ -65,11 +74,12 @@
   font-size: var(--fontSize-S);
   font-weight: var(--fontWeight-light);
   text-align: left;
+}
+
+.DataTable thead th {
   /* transform: rotate(180deg);
   writing-mode: vertical-rl; */
-  height: 10rem;
-  max-height: 10rem;
-  min-height: 10rem;
+  height: 15rem;
   max-width: var(--colWidth-S);
   overflow: visible;
   position: relative;
@@ -77,26 +87,31 @@
   white-space: nowrap;
 }
 
-.DataTable th.colgroupHeader {
+.DataTable thead th.colgroupHeader {
   font-weight: var(--fontWeight-bold);
   padding-left: var(--margin-L);
 }
 
-.DataTable th > span {
+.DataTable thead th > span {
   cursor: pointer;
-  display: inline-block;
-  /* position: absolute;
+  display: block;
+  position: absolute;
+  left: 0;
   bottom: 0;
-  right: 0; */
   transform-origin: 0% 0%;
-  transform: rotate(-70deg);
+  transform: rotate(var(--rotation-M));
 }
 
-th.col--Lead_variant,
-th.col--Log_p_,
-th.col--Beta,
-th.col--Approved_symbol {
-  padding-left: var(--margin-M);
+.DataTable thead th.colgroupHeader > span {
+  transform: translate(calc(var(--margin-L) - var(--margin-M))) rotate(var(--rotation-M));
+}
+
+.DataTable thead th.col--Lead_variant > span,
+.DataTable thead th.col--Log_p_ > span,
+.DataTable thead th.col--Beta > span {
+  left: auto;
+  right: var(--margin-M);
+  transform: translateY(calc(-1 * var(--margin-S)));
 }
 
 tr.betaNeg td {
@@ -129,7 +144,7 @@ td.col--Log_p_,
 td.col--Beta,
 td.col--Approved_symbol {
   font-family: var(--fontFamily-mono);
-  padding-left: var(--margin-M);
+  padding-right: var(--margin-M);
   text-align: right;
 }
 

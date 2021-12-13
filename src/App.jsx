@@ -12,7 +12,6 @@ import React from 'react';
 
 import './App.css';
 
-
 /* 
  * Helper functions 
  *
@@ -216,7 +215,26 @@ class NumberFormatter {
 }
 
 
-const NON_ANNOTATION_COLS = [
+const APP_INTRO =
+        <div className="appIntro">
+          <h4>To do and to discuss</h4>
+          <ul>
+            <li>Text-mined disease-linkage data from OT. Includes Orphanet. See 
+              categories, which are similar to, e.g., mammalian phenotypes.</li>
+            <li>What’s special about GenCC data?</li>
+            <li>In non-prop view, vary opacity based on expression specificity</li>
+            <li>Add cross-highlighting on hover</li>
+            <li>Dynamically fetch gene and FinnGen data</li>
+          </ul>
+        </div>,
+      OPTIONS_INTRO =
+        <p className="optionsIntro">
+          You can select from the options below. You can also hide individual columns
+          or column groups by clicking on their header. (This does not affect the
+          relative expression calculations.) To reshow hidden columns, just refresh
+          the page.
+        </p>,
+      NON_ANNOTATION_COLS = [
         {
           name: 'Credible set',
           items: [
@@ -262,11 +280,14 @@ const NON_ANNOTATION_COLS = [
       CODING_GENE_TYPE = 'protein_coding',
       APP_OPTIONS = {
         useCombinedExpressions: {
-          label: 'Use a relative expression scale combining RNA and protein',
+          label: `Use a combined, relative expression scale averaged from relative RNA 
+                  and protein expressions and inversely weighted by the number of 
+                  unknown expressions`,
           initialValue: true
         },
         useProportionalExpressions: {
-          label: 'Use proportional expressions',
+          label: `Normalize expression values per gene and per RNA or protein expression
+                  (this has no effect if combined expression is selected)`,
           initialValue: true
         },
         // These are replaced with dynamical hide-prefixed class names
@@ -377,27 +398,37 @@ class App extends React.Component {
       <div className={this.getAppClassNames()}>
         <header className="App-header">
           <h1>Panomicon view for {phenotype}</h1>
+          {
+            APP_INTRO
+          }
           <section className="App-options">
             <p>Credible sets: {dataset.length} • Genes: {geneCount}</p>
+            {
+              OPTIONS_INTRO
+            }
             <form>
-              {Object.entries(options).map(([k, v]) =>
-                <label key={k} >
-                  <input name={k}
-                         type="checkbox"
-                         checked={v}
-                         onChange={this.handleInputChange} />
-                  {APP_OPTIONS[k].label}
-                </label>
-              )}
+              {
+                Object.entries(options).map(([k, v]) =>
+                  <label key={k} >
+                    <input name={k}
+                          type="checkbox"
+                          checked={v}
+                          onChange={this.handleInputChange} />
+                    {APP_OPTIONS[k].label}
+                  </label>
+                )
+              }
             </form>
           </section>
         </header>
         <table className="DataTable">
-          { // <DataCols columns={columns} 
+          { // <DataCols columns={columns} />
           }
           <thead>
             <tr>
-              {tHeaders}
+              {
+                tHeaders
+              }
             </tr>
           </thead>
           <tbody>
@@ -405,20 +436,20 @@ class App extends React.Component {
                          columns={columns}
                          expressionType={exprType}
                          key="summary" />
-            {dataset.map(cs => 
-              <CredibleSet data={cs}
-                           columns={columns}
-                           expressionType={exprType}
-                           key={cs.locus} />
-            )}
+            {
+              dataset.map(cs => 
+                <CredibleSet data={cs}
+                            columns={columns}
+                            expressionType={exprType}
+                            key={cs.locus} />
+              )
+            }
           </tbody>
         </table>
       </div>
     );
   }
 }
-export default App;
-
 
 class DataTH extends React.Component {
 
@@ -502,7 +533,9 @@ class Gene extends React.Component {
 
     
     return (<>
-      {emptyTd}
+      {
+        emptyTd
+      }
       <td className={getClassNames(columns[1].items[0])}>
         {data.approved_symbol}
       </td>
@@ -597,32 +630,36 @@ class ExpressionValue extends React.Component {
                 </>);
               case 'summary':
                 return (<>
-                  { v[0] !== UNKNOWN_EXPRESSION_VALUE &&
-                    <rect width={v[0] * 50 + '%'}
-                          height="100%"
-                          x={(1 - (v[0] + v[1])/2) * 50 + '%'}
-                          className="expressionValues--betaPos" />
+                  { 
+                    v[0] !== UNKNOWN_EXPRESSION_VALUE &&
+                      <rect width={v[0] * 50 + '%'}
+                            height="100%"
+                            x={(1 - (v[0] + v[1])/2) * 50 + '%'}
+                            className="expressionValues--betaPos" />
                   }
-                  { v[1] !== UNKNOWN_EXPRESSION_VALUE &&
-                    <rect width={v[1] * 50 + '%'}
-                          height="100%"
-                          x={(1 - (v[0] + v[1])/2 + v[0]) * 50 + '%'}
-                          className="expressionValues--betaNeg" />
+                  { 
+                    v[1] !== UNKNOWN_EXPRESSION_VALUE &&
+                      <rect width={v[1] * 50 + '%'}
+                            height="100%"
+                            x={(1 - (v[0] + v[1])/2 + v[0]) * 50 + '%'}
+                            className="expressionValues--betaNeg" />
                   }
                 </>);
               default:
                 return (<>
-                  { v[0] !== UNKNOWN_EXPRESSION_VALUE &&
-                    <rect width={v[0] * 50 + '%'}
-                          height="100%"
-                          x={50 - (v[0] * 50) + '%'}
-                          className="expressionValues--rna" />
+                  { 
+                    v[0] !== UNKNOWN_EXPRESSION_VALUE &&
+                      <rect width={v[0] * 50 + '%'}
+                            height="100%"
+                            x={50 - (v[0] * 50) + '%'}
+                            className="expressionValues--rna" />
                   }
-                  { v[1] !== UNKNOWN_EXPRESSION_VALUE &&
-                    <rect width={v[1] * 50 + '%'}
-                          height="100%"
-                          x="50%"
-                          className="expressionValues--protein" />
+                  { 
+                    v[1] !== UNKNOWN_EXPRESSION_VALUE &&
+                      <rect width={v[1] * 50 + '%'}
+                            height="100%"
+                            x="50%"
+                            className="expressionValues--protein" />
                   }
                 </>);
               }
@@ -645,19 +682,24 @@ class BinaryValue extends React.Component {
     const value = this.props.value == true,
           className = `BinaryValue ${this.props.additionalClass} ${value ? ' empty' : ''}`;
     return (
-      <td className={className}>{value &&
-        <svg className="binaryTrue"
-             viewBox="0 0 100 100">
-          <circle cx="50%" 
-                  cy="50%" 
-                  r="50%"/>
-        </svg>
-      }</td>
+      <td className={className}>
+        {
+          value &&
+            <svg className="binaryTrue"
+                viewBox="0 0 100 100">
+              <circle cx="50%" 
+                      cy="50%" 
+                      r="50%"/>
+            </svg>
+        }
+      </td>
     )
   }
 
 }
 
+
+export default App;
 
 // class DataCols extends React.Component {
 
